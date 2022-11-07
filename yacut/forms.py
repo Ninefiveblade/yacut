@@ -4,20 +4,27 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, URLField
 from wtforms.validators import InputRequired, Length, Optional, Regexp
 
+from .constants import CUSTOM_ID_FORM_CHECK, MAX_LENGHT
+
+REQUIRED_FIELD = "Обязательное поле!"
+WRONG_STRING_FORMAT = (
+    "Строка должна включать только английские символы и цифры!"
+)
+
 
 class UrlForm(FlaskForm):
     """ Define a form for prepare and validate users data. """
 
     original_link = URLField(
         "Добавьте ссылку на обработку",
-        validators=[Length(1, 256), InputRequired("Обязательное поле")],
+        validators=[InputRequired(REQUIRED_FIELD)],
     )
     custom_id = StringField(
         "Ваш вариант ссылки",
         validators=[
-            Length(1, 16),
+            Length(max=MAX_LENGHT),
             Optional(),
-            Regexp(r"^[A-Za-z0-9]+$", message="string must be alphanumeric"),
+            Regexp(f'^{CUSTOM_ID_FORM_CHECK}+$', message=WRONG_STRING_FORMAT),
         ],
     )
     submit = SubmitField("Создать")

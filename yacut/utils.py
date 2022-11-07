@@ -1,12 +1,7 @@
-""" Yacut utils module """
-
 import random
 
-from .constants import HASH_LENGTH, RANDOM_BIT_SIZE
+from .constants import HASH_SIZE, CUSTOM_ID_FORM_CHECK
 
 
-def get_unique_short_id():
-    "Generate unique element for url"
-
-    hash = random.getrandbits(RANDOM_BIT_SIZE)
-    return ("%x" % hash)[:HASH_LENGTH]
+def gen_id(size=HASH_SIZE, chars=CUSTOM_ID_FORM_CHECK):
+    return ''.join(random.choice(chars) for _ in range(size))
