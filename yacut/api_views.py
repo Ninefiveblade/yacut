@@ -35,9 +35,11 @@ def add_short_url():
         raise InvalidAPIUsage(EMPTY_BODY)
     if 'url' not in data:
         raise InvalidAPIUsage(EMPTY_URL)
-    url = URL_map.create(
-        data.get('url'),
-        data.get('custom_id'),
-        flag='api'
-    )
+    try:
+        url = URL_map.create(
+            data.get('url'),
+            data.get('custom_id')
+        )
+    except ValueError as error:
+        raise InvalidAPIUsage(str(error))
     return url.create_link_to_dict(), HTTPStatus.CREATED

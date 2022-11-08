@@ -7,11 +7,12 @@ import re
 from flask import request
 
 from yacut import db
-from .error_handler import UniqueShortIDError, InvalidAPIUsage
+from .error_handler import UniqueShortIDError
 from .constants import (
-    MAX_ROWS,
+    MAX_CUSTOM_ID_CREATE_TRYIES,
     PATTERN,
     HASH_SIZE,
+    CHARACTER_SET,
     MAX_LENGHT_SHORT,
 )
 
@@ -21,7 +22,7 @@ WRONG_CUSTOM_ID = "Указано недопустимое имя для кор�
 OCCUPIED_CUSTOM_ID = 'Имя "{}" уже занято.'
 MESSAGE_FOR_SHORT = "Имя {} уже занято!"
 URL_EXISTS = "Такой url уже существует!"
-GET_SHORT_ID_ERROR_MSG = (
+GET_SHORT_ID_ERROR = (
     "Невозможно сгенерировать ключ, все последовательности уже заняты."
 )
 
@@ -36,11 +37,13 @@ class URL_map(db.Model):
     def get_unique_short_id():
         """ Get hash unique, check in db. """
 
-        for _ in range(MAX_ROWS):
-            hash = ''.join(random.choices(PATTERN, k=HASH_SIZE))
+        for _ in range(MAX_CUSTOM_ID_CREATE_TRYIES):
+            hash = ''.join(random.choices(
+                CHARACTER_SET, k=HASH_SIZE
+            ))
             if not URL_map.filter_exists(URL_map.short, hash):
                 return hash
-        raise ValueError(GET_SHORT_ID_ERROR_MSG)
+        raise ValueError(GET_SHORT_ID_ERROR)
 
     @staticmethod
     def filter_exists(key, value):
@@ -61,22 +64,20 @@ class URL_map(db.Model):
         return URL_map.query.filter(key == value).first_or_404()
 
     @staticmethod
-    def create(original, short_link, flag='http'):
+    def create(original, short_link):
         """ Create data in db. """
-
-        if flag == 'api':
-            if short_link is not None and short_link != "":
-                if not re.fullmatch(
-                    PATTERN, short_link
-                ) or len(short_link) > MAX_LENGHT_SHORT:
-                    raise InvalidAPIUsage(WRONG_CUSTOM_ID)
-                if URL_map.filter_exists(URL_map.short, short_link):
-                    raise InvalidAPIUsage(OCCUPIED_CUSTOM_ID.format(short_link))
-            else:
-                try:
-                    short_link = URL_map.get_unique_short_id()
-                except ValueError as error:
-                    raise UniqueShortIDError(error)
+        if short_link is not None and short_link != "":
+            if not re.fullmatch(
+                PATTERN, short_link
+            ) or len(short_link) > MAX_LENGHT_SHORT:
+                raise ValueError(WRONG_CUSTOM_ID)
+            if URL_map.filter_exists(URL_map.short, short_link):
+                raise ValueError(OCCUPIED_CUSTOM_ID.format(short_link))
+        else:
+            try:
+                short_link = URL_map.get_unique_short_id()
+            except ValueError as error:
+                raise UniqueShortIDError(error)
         url = URL_map(
             original=original,
             short=short_link,
