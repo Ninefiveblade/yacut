@@ -3,8 +3,7 @@ import string
 HASH_SIZE = 6
 MAX_LENGHT_SHORT = 16
 MAX_LENGHT_ORIGINAL = 2000
-PATTERN_CONST = string.ascii_letters + string.digits
-SHORT_CHECK = f'^[{PATTERN_CONST}]+'
-CUSTOM_ID_FORM_CHECK = f'[{PATTERN_CONST}]'
-
-print(CUSTOM_ID_FORM_CHECK)
+MAX_ROWS = 10
+CHECK_FORMAT = string.ascii_letters + string.digits
+PATTERN = f'^[{CHECK_FORMAT}]+'
+CUSTOM_ID_FORM_CHECK = f'[{CHECK_FORMAT}]'

@@ -5,7 +5,7 @@ from wtforms import StringField, SubmitField, URLField
 from wtforms.validators import InputRequired, Length, Optional, Regexp
 
 from .constants import (
-    CUSTOM_ID_FORM_CHECK,
+    PATTERN,
     MAX_LENGHT_SHORT,
     MAX_LENGHT_ORIGINAL
 )
@@ -31,7 +31,7 @@ class UrlForm(FlaskForm):
         validators=[
             Length(max=MAX_LENGHT_SHORT),
             Optional(),
-            Regexp(f'^{CUSTOM_ID_FORM_CHECK}+$', message=WRONG_STRING_FORMAT),
+            Regexp(PATTERN, message=WRONG_STRING_FORMAT),
         ],
     )
     submit = SubmitField(SUMBIT_HELP_MESSAGE)

@@ -36,3 +36,7 @@ class InvalidAPIUsage(Exception):
 @app.errorhandler(InvalidAPIUsage)
 def invalid_api_usage(error):
     return jsonify(error.to_dict()), error.status_code
+
+
+class UniqueShortIDError(Exception):
+    """ Raise error if short_id hash doesn't match """

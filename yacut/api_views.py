@@ -1,20 +1,19 @@
 """ Yacut api views module """
 
 from http import HTTPStatus
-import re
 
 from flask import jsonify, request
 
 from . import app
 from .error_handler import InvalidAPIUsage
 from .models import URL_map
-from .constants import SHORT_CHECK, MAX_LENGHT_SHORT
 
 EMPTY_BODY = "Отсутствует тело запроса"
 EMPTY_URL = '"url" является обязательным полем!'
 WRONG_CUSTOM_ID = "Указано недопустимое имя для короткой ссылки"
 NOT_FOUND_CUSTOM_ID = "Указанный id не найден"
 OCCUPIED_CUSTOM_ID = 'Имя "{}" уже занято.'
+ADD_SHORT_URL_MSG = "Возникла ошибка преобразования типов {}"
 
 
 @app.route("/api/id/<string:short_id>/", methods=["GET"])
@@ -36,17 +35,9 @@ def add_short_url():
         raise InvalidAPIUsage(EMPTY_BODY)
     if 'url' not in data:
         raise InvalidAPIUsage(EMPTY_URL)
-    original = data.get('url')
-    custom_id = data.get('custom_id')
-    if custom_id is not None:
-        if custom_id == "":
-            custom_id = URL_map.get_unique_short_id()
-        elif not re.fullmatch(SHORT_CHECK, custom_id) or\
-                len(custom_id) > MAX_LENGHT_SHORT:
-            raise InvalidAPIUsage(WRONG_CUSTOM_ID)
-        if URL_map.filter_exists(URL_map.short, custom_id):
-            raise InvalidAPIUsage(OCCUPIED_CUSTOM_ID.format(custom_id))
-    else:
-        custom_id = URL_map.get_unique_short_id()
-    url = URL_map.create(original, custom_id)
+    url = URL_map.create(
+        data.get('url'),
+        data.get('custom_id'),
+        flag='api'
+    )
     return url.create_link_to_dict(), HTTPStatus.CREATED
