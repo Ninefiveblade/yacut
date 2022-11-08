@@ -1,12 +1,13 @@
 
 <html>
-<head>
-{% include 'includes/head.html' %}
-{% include 'includes/js.html' %}
-</head>
-<body>
-{% block content %}
-{% endblock %}
-<body>
-{% include 'includes/footer.html' %}
+    <head>
+        {% include 'includes/head.html' %}
+        {% include 'includes/js.html' %}
+    </head>
+    <body>
+        {% include 'includes/header.html' %}
+        {% block content %}
+        {% endblock %}
+        {% include 'includes/footer.html' %}
+    <body>
 </html>

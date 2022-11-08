@@ -1,6 +1,10 @@
 import string
 
 HASH_SIZE = 6
-MAX_LENGHT = 16
-SHORT_CHECK = f'^[{string.ascii_letters + string.digits}]{{1,16}}'
-CUSTOM_ID_FORM_CHECK = f'[{string.ascii_letters + string.digits}]'
+MAX_LENGHT_SHORT = 16
+MAX_LENGHT_ORIGINAL = 2000
+PATTERN_CONST = string.ascii_letters + string.digits
+SHORT_CHECK = f'^[{PATTERN_CONST}]+'
+CUSTOM_ID_FORM_CHECK = f'[{PATTERN_CONST}]'
+
+print(CUSTOM_ID_FORM_CHECK)

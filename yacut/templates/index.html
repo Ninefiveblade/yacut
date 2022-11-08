@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  {% include 'includes/header.html' %}
   <main>
     <section class="container my-5 px-4">
       <h1 class="text-center"><span style="color:red">Ya</span>Cut</h1>
@@ -52,10 +51,10 @@
           <div class="col-sm">
             <p class="text-center">
             {% if link %}
-            <h5 class="text-center">
-              Ваша новая ссылка готова:
-              <a href="{{ link }}">{{ link }}</a>
-            </h5>
+              <h5 class="text-center">
+                  Ваша новая ссылка готова:
+                  <a href="{{ link }}">{{ link }}</a>
+              </h5>
             {% endif %}
             </p>
           </div>
